@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Jakub Dlugolecki
+  description: Installs and registers the official GitLab runner.
+  company: 
+  license: Apache
+  min_ansible_version: 2.2.2
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  galaxy_tags:
+  - proxy
+  - gitlab
+dependencies: []

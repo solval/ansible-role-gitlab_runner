@@ -1,0 +1,12 @@
+---
+- name: List registered runners
+  command: gitlab-runner list
+  register: registered_runners 
+  changed_when: False
+  become: yes
+
+- name: Register runners
+  command: gitlab-runner register --non-interactive{% for param in item %} --{{ param }}='{{ item[param] }}'{% endfor %}
+  when: registered_runners.stderr.find('\n%s ' % item.description) == -1
+  with_items: "{{ gitlab_runner_list }}"
+  become: yes

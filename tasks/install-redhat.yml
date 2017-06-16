@@ -1,0 +1,39 @@
+---
+
+- name: RHEL Install GitLab GPG
+  rpm_key:
+    state: present
+    key: https://packages.gitlab.com/gpg.key
+  environment: "{{ gitlab_runner_proxy_env }}"
+  become: yes
+
+- name: RHEL Install GitLab dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  environment: "{{ gitlab_runner_proxy_env }}"
+  become: yes
+  with_items:
+    - pygpgme
+    - yum-utils
+
+- name: RHEL Install GitLab Repo
+  yum_repository:
+    description: GitLab Runner Repo
+    name: runner_gitlab-ci-multi-runner
+    baseurl: "https://packages.gitlab.com/runner/gitlab-ci-multi-runner/el/{{ ansible_distribution_major_version }}/$basearch"
+    repo_gpgcheck: yes
+    gpgcheck: no
+    gpgkey: https://packages.gitlab.com/runner/gitlab-ci-multi-runner/gpgkey
+    sslverify: yes
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+  notify:
+    - gitlab_runner yum makecache
+  become: yes
+
+- name: RHEL Install GitLab runner
+  package:
+    name: gitlab-ci-multi-runner
+    state: latest
+  environment: "{{ gitlab_runner_proxy_env }}"
+  become: yes

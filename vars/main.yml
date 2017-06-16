@@ -1,0 +1,7 @@
+---
+gitlab_runner_proxy_env:
+  ansible_user_id: "{{ ansible_user_id }}"
+  http_proxy: "{{ lookup('env', 'http_proxy') }}"
+  https_proxy: "{{ lookup('env', 'https_proxy') }}"
+  socks_proxy: "{{ lookup('env', 'socks_proxy') }}"
+  no_proxy: "{{ lookup('env', 'no_proxy') }}"

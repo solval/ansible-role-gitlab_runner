@@ -1,0 +1,5 @@
+---
+- name: gitlab_runner yum makecache
+  shell:  yum -q makecache -y --disablerepo='*' --enablerepo='runner_gitlab-ci-multi-runner'
+  environment: "{{ gitlab_runner_proxy_env }}"
+  become: yes

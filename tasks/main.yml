@@ -1,0 +1,7 @@
+---
+
+- name: Install Gitlab
+  include: "install-{{ ansible_os_family|lower }}.yml"
+
+- name: Register Runners
+  include: register.yml
