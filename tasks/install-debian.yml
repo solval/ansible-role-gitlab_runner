@@ -2,7 +2,7 @@
 
 - name: Apt repo is defined
   stat:
-    path: /etc/apt/sources.list.d/runner_gitlab-ci-multi-runner.list
+    path: /etc/apt/sources.list.d/runner_gitlab-runner.list
   register: apt_repo
 
 - name: Create temporary directory for GitLab repo download
@@ -13,7 +13,7 @@
 
 - name: Download GitLab repo installer
   get_url:
-    url: https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh
+    url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
     dest: "{{ t.path }}/script.deb.sh"
     mode: '0755'
   environment: "{{ gitlab_runner_proxy_env }}"
@@ -22,14 +22,14 @@
 - name: Install GitLab repo
   command: "{{ t.path }}/script.deb.sh"
   args:
-    creates: /etc/apt/sources.list.d/runner_gitlab-ci-multi-runner.list
+    creates: /etc/apt/sources.list.d/runner_gitlab-runner.list
   environment: "{{ gitlab_runner_proxy_env }}"
   when: not apt_repo.stat.exists
   become: yes
 
 - name: Install GitLab runner
   package:
-    name: gitlab-ci-multi-runner
+    name: gitlab-runner
     state: latest
   environment: "{{ gitlab_runner_proxy_env }}"
   become: yes
