@@ -19,6 +19,11 @@
   environment: "{{ gitlab_runner_proxy_env }}"
   when: not apt_repo.stat.exists
 
+- name: Remove old GitLab repo
+  file:
+    name: /etc/apt/sources.list.d/runner_gitlab-ci-multi-runner.list
+    state: absent
+
 - name: Install GitLab repo
   command: "{{ t.path }}/script.deb.sh"
   args:

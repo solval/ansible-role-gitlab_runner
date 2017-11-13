@@ -17,6 +17,14 @@
     - pygpgme
     - yum-utils
 
+- name: Remove old repository
+  yum_repository:
+    name: runner_gitlab-ci-multi-runner
+    state: absent
+  notify:
+    - yum-clean-metadata
+  become: yes
+
 - name: RHEL Install GitLab Repo
   yum_repository:
     description: GitLab Runner Repo
@@ -31,9 +39,13 @@
     - gitlab_runner yum makecache
   become: yes
 
+# -10. perfix is required to migrate from the previous package name: gitlab-ci-multi-runner
+# Without this prefix, Ansible won't upgrade it.
 - name: RHEL Install GitLab runner
-  package:
-    name: gitlab-runner
+  yum:
+    name: "gitlab-runner-10.*"
     state: latest
+  notify:
+    - gitlab_runner service file workaround
   environment: "{{ gitlab_runner_proxy_env }}"
   become: yes
