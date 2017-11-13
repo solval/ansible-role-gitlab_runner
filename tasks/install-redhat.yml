@@ -22,7 +22,7 @@
     name: runner_gitlab-ci-multi-runner
     state: absent
   notify:
-    - yum-clean-metadata
+    - gitlab_runner yum clean metadata
   become: yes
 
 - name: RHEL Install GitLab Repo
