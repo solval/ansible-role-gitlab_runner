@@ -1,5 +1,5 @@
 ---
-gitlab_runner_proxy_env:
+proxy_env:
   ansible_user_id: "{{ ansible_user_id }}"
   http_proxy: "{{ lookup('env', 'http_proxy') }}"
   https_proxy: "{{ lookup('env', 'https_proxy') }}"
