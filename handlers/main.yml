@@ -1,7 +1,7 @@
 ---
 - name: gitlab_runner yum makecache
   shell:  yum -q makecache -y --disablerepo='*' --enablerepo='runner_gitlab-runner'
-  environment: "{{ gitlab_runner_proxy_env }}"
+  environment: "{{ proxy_env }}"
   become: yes
 
 - name: gitlab_runner yum clean metadata
@@ -11,5 +11,5 @@
 # https://gitlab.com/gitlab-org/gitlab-runner/issues/2786
 - name:  gitlab_runner service file workaround
   shell: /usr/share/gitlab-runner/post-install
-  environment: "{{ gitlab_runner_proxy_env }}"
+  environment: "{{ proxy_env }}"
   become: yes

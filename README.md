@@ -54,7 +54,12 @@ Then define a role
 ```
 - hosts: your-server
   roles:
-    - solval.gitlab_runner
+    - role: solval.gitlab_runner
+  # If you use proxy:
+  #vars:
+    #proxy_env:
+      #http_proxy: 'http://your-proxy:3128'
+      #https_proxy: 'http://your-proxy:3128'
 ```
 
 License
