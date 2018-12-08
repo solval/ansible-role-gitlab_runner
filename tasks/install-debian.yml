@@ -1,5 +1,10 @@
 ---
 
+- name: Install apt-transport-https for gitlab repo
+  apt:
+    name: apt-transport-https
+    state: latest
+
 - name: Remove old GitLab repo
   file:
     name: /etc/apt/sources.list.d/runner_gitlab-ci-multi-runner.list
@@ -17,6 +22,7 @@
     filename: 'runner_gitlab-runner'
 
 - name: Install GitLab runner
-  package:
+  apt:
     name: gitlab-runner
     state: latest
+    update_cache: yes
