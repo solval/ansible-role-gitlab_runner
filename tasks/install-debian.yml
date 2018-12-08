@@ -1,40 +1,28 @@
 ---
 
-- name: Apt repo is defined
-  stat:
-    path: /etc/apt/sources.list.d/runner_gitlab-runner.list
-  register: apt_repo
-
-- name: Create temporary directory for GitLab repo download
-  tempfile:
-    state: directory
-  register: t
-  when: not apt_repo.stat.exists
-
-- name: Download GitLab repo installer
-  get_url:
-    url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
-    dest: "{{ t.path }}/script.deb.sh"
-    mode: '0755'
-  environment: "{{ proxy_env }}"
-  when: not apt_repo.stat.exists
+- name: Install apt-transport-https for gitlab repo
+  apt:
+    name: apt-transport-https
+    state: latest
 
 - name: Remove old GitLab repo
   file:
     name: /etc/apt/sources.list.d/runner_gitlab-ci-multi-runner.list
     state: absent
 
+- name: Add an Gitlab signing key, uses whichever key is at the URL
+  apt_key:
+    url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+    state: present
+
 - name: Install GitLab repo
-  command: "{{ t.path }}/script.deb.sh"
-  args:
-    creates: /etc/apt/sources.list.d/runner_gitlab-runner.list
-  environment: "{{ proxy_env }}"
-  when: not apt_repo.stat.exists
-  become: yes
+  apt_repository:
+    repo: "deb https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main"
+    state: present
+    filename: 'runner_gitlab-runner'
 
 - name: Install GitLab runner
-  package:
+  apt:
     name: gitlab-runner
     state: latest
-  environment: "{{ proxy_env }}"
-  become: yes
+    update_cache: yes
